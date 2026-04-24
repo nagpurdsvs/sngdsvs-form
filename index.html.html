@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNGDSVS - Member Data Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Gujarati&family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron:#E8701A; --saffron-pale:#FDF3EA;
+    --deep:#1A0F00; --mid:#5C3D1E;
+    --gold:#C9952A; --gold-light:#F0C96B;
+    --cream:#FEFAF4; --white:#FFFFFF;
+    --border:#E8D5B7; --text:#2C1A00; --muted:#8B6E4E;
+    --success:#2E7D32; --success-pale:#E8F5E9;
+    --error:#C62828; --error-pale:#FFEBEE; --error-border:#EF9A9A;
+    --info:#1565C0; --info-pale:#E3F2FD; --info-border:#90CAF9;
+    --warn-bg:#FFF8E1; --warn-border:#FFD54F; --warn-text:#5D4037;
+    --radius:12px; --radius-sm:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;padding-bottom:60px;}
+
+  /* ── HEADER ── */
+  .header{background:linear-gradient(135deg,var(--deep) 0%,var(--mid) 60%,var(--saffron) 100%);position:relative;overflow:hidden;}
+  .header::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(201,149,42,0.15);}
+  .header::after{content:'';position:absolute;bottom:-20px;left:30%;width:120px;height:120px;border-radius:50%;background:rgba(232,112,26,0.12);}
+  .progress-wrap{background:rgba(255,255,255,0.08);height:5px;}
+  .progress-bar{height:100%;background:var(--gold);transition:width 0.4s ease;width:0%;}
+  .header-inner{position:relative;z-index:1;padding:28px 20px 24px;text-align:center;}
+  .header-badge{display:inline-block;background:var(--gold);color:var(--deep);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:12px;}
+  .header h1{font-family:'Playfair Display',serif;font-size:clamp(15px,4.2vw,21px);color:var(--white);line-height:1.3;margin-bottom:6px;}
+  .header h2{font-family:'Tiro Devanagari Gujarati',serif;font-size:clamp(13px,3.5vw,17px);color:var(--gold-light);font-weight:400;line-height:1.4;margin-bottom:14px;}
+  .member-id-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:24px;padding:6px 16px;color:var(--white);font-size:13px;}
+  .member-id-badge strong{color:var(--gold-light);letter-spacing:1px;}
+  .family-counter{display:none;margin-top:8px;}
+  .family-counter.show{display:block;}
+  .family-counter-inner{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--gold-light);}
+
+  .form-wrap{max-width:680px;margin:0 auto;padding:20px 16px;}
+
+  /* ── MODE CHOOSER ── */
+  .mode-chooser{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:24px 20px;margin-bottom:20px;box-shadow:0 2px 12px rgba(92,61,30,0.07);}
+  .mode-chooser-title{font-family:'Playfair Display',serif;font-size:19px;color:var(--mid);margin-bottom:4px;text-align:center;}
+  .mode-chooser-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5;text-align:center;}
+
+  /* Before you begin checklist */
+  .before-begin{background:var(--warn-bg);border:1.5px solid var(--warn-border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:20px;}
+  .before-begin-title{font-size:13px;font-weight:700;color:var(--warn-text);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+  .before-begin-title-gu{font-family:'Tiro Devanagari Gujarati',serif;font-size:12px;font-weight:400;color:var(--warn-text);opacity:0.85;margin-left:4px;}
+  .checklist{list-style:none;display:flex;flex-direction:column;gap:8px;}
+  .checklist li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--warn-text);line-height:1.4;}
+  .checklist li .ci{font-size:18px;flex-shrink:0;margin-top:-1px;}
+  .checklist li .ct{display:flex;flex-direction:column;gap:1px;}
+  .checklist li .ct-en{font-weight:600;}
+  .checklist li .ct-gu{font-family:'Tiro Devanagari Gujarati',serif;font-size:11.5px;opacity:0.85;}
+
+  .mode-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:420px){.mode-btns{grid-template-columns:1fr;}}
+  .mode-btn{display:block;padding:16px 12px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;background:var(--cream);transition:all 0.2s;font-family:'DM Sans',sans-serif;text-align:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;text-decoration:none;color:inherit;}
+  .mode-btn.selected,.mode-btn:active{border-color:var(--saffron);background:var(--saffron-pale);}
+  .mode-btn.selected .mode-btn-label{color:var(--saffron);}
+  .mode-btn-icon{font-size:28px;margin-bottom:8px;}
+  .mode-btn-label{font-size:14px;font-weight:700;color:var(--mid);display:block;margin-bottom:3px;}
+  .mode-btn-sub{font-size:11px;color:var(--muted);line-height:1.4;display:block;}
+
+  /* ── PRE-FILL BANNER ── */
+  .prefill-banner{display:none;background:var(--info-pale);border:1.5px solid var(--info-border);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:20px;}
+  .prefill-banner.show{display:flex;align-items:flex-start;gap:10px;}
+  .prefill-banner-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+  .prefill-banner-text{font-size:13px;color:var(--info);line-height:1.5;}
+  .prefill-banner-text strong{font-weight:700;display:block;margin-bottom:2px;}
+  .prefill-edit-link{font-size:12px;color:var(--info);text-decoration:underline;cursor:pointer;margin-top:4px;display:inline-block;}
+
+  /* ── LOCKED FIELD ── */
+  .fi-locked{background:#f0f4f8!important;border-color:#b0bec5!important;color:#546e7a!important;cursor:not-allowed!important;}
+  .locked-tag{display:none;align-items:center;gap:4px;font-size:10px;color:var(--info);background:var(--info-pale);border:1px solid var(--info-border);border-radius:10px;padding:2px 8px;margin-bottom:6px;}
+  .locked-tag.show{display:inline-flex;}
+
+  /* ── SECTION ── */
+  .section{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:20px;overflow:hidden;box-shadow:0 2px 12px rgba(92,61,30,0.07);}
+  .section-head{background:linear-gradient(90deg,var(--saffron-pale),var(--cream));padding:14px 20px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .sec-icon{width:32px;height:32px;background:var(--saffron);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+  .sec-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--mid);}
+  .sec-gu{font-family:'Tiro Devanagari Gujarati',serif;font-size:13px;color:var(--muted);font-weight:400;display:block;}
+  .sec-body{padding:20px;}
+
+  /* Section instruction box */
+  .sec-instr{background:var(--info-pale);border-left:3px solid var(--info-border);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:10px 14px;margin-bottom:18px;}
+  .sec-instr-en{font-size:12.5px;color:var(--info);font-weight:500;line-height:1.5;}
+  .sec-instr-gu{font-family:'Tiro Devanagari Gujarati',serif;font-size:12px;color:var(--info);opacity:0.85;margin-top:3px;line-height:1.5;}
+
+  /* ── FIELDS ── */
+  .field{margin-bottom:20px;}
+  .field:last-child{margin-bottom:0;}
+  .lbl{display:block;font-size:13px;font-weight:600;color:var(--mid);margin-bottom:3px;}
+  .lbl-gu{font-family:'Tiro Devanagari Gujarati',serif;font-size:12px;color:var(--muted);font-weight:400;display:block;margin-bottom:6px;}
+  .req{color:var(--saffron);margin-left:2px;}
+
+  input[type="text"],input[type="email"],input[type="tel"],input[type="date"],select,textarea{
+    width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+    font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--cream);
+    transition:border-color 0.2s,box-shadow 0.2s,background 0.2s;-webkit-appearance:none;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,112,26,0.12);background:var(--white);}
+  textarea{resize:vertical;min-height:80px;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B6E4E' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+  .fi.err{border-color:var(--error-border)!important;background:var(--error-pale)!important;}
+  .fi.ok{border-color:#81C784!important;background:var(--success-pale)!important;}
+  .ferr{display:none;font-size:11.5px;color:var(--error);margin-top:5px;padding:4px 8px 4px 10px;background:var(--error-pale);border-left:3px solid var(--error);border-radius:0 4px 4px 0;}
+  .ferr.show{display:block;animation:slideIn 0.2s ease;}
+  @keyframes slideIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:480px){.two-col{grid-template-columns:1fr;}}
+
+  /* ── iOS-SAFE BUTTON SELECTOR ── */
+  .btn-sel-grid{display:grid;gap:8px;}
+  .btn-sel-grid.cols-4{grid-template-columns:repeat(4,1fr);}
+  .btn-sel-grid.cols-2{grid-template-columns:repeat(2,1fr);}
+  .sel-btn{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:10px 6px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+    cursor:pointer;background:var(--cream);transition:all 0.15s;
+    font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--mid);
+    text-align:center;-webkit-tap-highlight-color:transparent;
+    min-height:44px;user-select:none;-webkit-user-select:none;
+  }
+  .sel-btn:active{transform:scale(0.97);}
+  .sel-btn.active{background:var(--saffron);border-color:var(--saffron);color:white;font-weight:600;}
+  .sel-btn.active .sel-sub{color:rgba(255,255,255,0.8);}
+  .sel-sub{font-family:'Tiro Devanagari Gujarati',serif;font-size:11px;color:var(--muted);margin-top:3px;display:block;}
+
+  /* ── PHOTO ── */
+  .photo-zone{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:18px 16px;text-align:center;background:var(--saffron-pale);transition:all 0.2s;position:relative;}
+  .photo-zone.perr{border-color:var(--error-border);background:var(--error-pale);}
+  .photo-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .pz-icon{font-size:26px;margin-bottom:6px;}
+  .pz-text{font-size:13px;font-weight:600;color:var(--mid);}
+  .pz-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+  .photo-btns{display:flex;gap:8px;margin-top:10px;justify-content:center;position:relative;z-index:1;}
+  .pbtn{display:flex;align-items:center;gap:5px;padding:9px 16px;border:1.5px solid var(--saffron);border-radius:20px;background:white;color:var(--saffron);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif;min-height:44px;-webkit-tap-highlight-color:transparent;}
+  .pbtn:active{background:var(--saffron);color:white;}
+  .photo-preview{margin-top:12px;position:relative;display:none;}
+  .photo-preview img{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-sm);border:2px solid #81C784;}
+  .photo-preview.show{display:block;}
+  .photo-remove{position:absolute;top:6px;right:6px;background:rgba(198,40,40,0.85);color:white;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+  .photo-ok{display:none;font-size:12px;color:var(--success);font-weight:600;margin-top:6px;}
+  .photo-ok.show{display:block;}
+
+  /* ── CONDITIONAL SECTIONS ── */
+  .cond{display:none;}
+  .cond.show{display:block;animation:fadeIn 0.3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── ERROR SUMMARY ── */
+  .err-box{display:none;background:var(--error-pale);border:1.5px solid var(--error-border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:16px;}
+  .err-box.show{display:block;}
+  .err-box-title{font-size:13px;font-weight:700;color:var(--error);margin-bottom:8px;}
+  .err-box ul{padding-left:18px;font-size:12.5px;color:var(--error);line-height:1.9;}
+
+  /* ── SUBMIT ── */
+  .submit-wrap{padding:0 0 20px;text-align:center;}
+  .btn-submit{width:100%;max-width:400px;padding:16px 32px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 20px rgba(232,112,26,0.35);transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;-webkit-tap-highlight-color:transparent;}
+  .btn-submit:active:not(:disabled){transform:scale(0.98);}
+  .btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
+  .submit-note{margin-top:10px;font-size:12px;color:var(--muted);}
+
+  /* ── OVERLAY ── */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(26,15,0,0.7);z-index:500;align-items:center;justify-content:center;}
+  .overlay.show{display:flex;}
+  .overlay-box{background:white;border-radius:var(--radius);padding:32px 28px;text-align:center;max-width:320px;width:90%;}
+  .spin{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--saffron);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .ov-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--mid);margin-bottom:6px;}
+  .ov-sub{font-size:13px;color:var(--muted);}
+
+  /* ── SUCCESS ── */
+  .success-screen{display:none;text-align:center;padding:36px 20px;background:white;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:20px;box-shadow:0 2px 12px rgba(92,61,30,0.07);}
+  .success-screen.show{display:block;}
+  .suc-icon{font-size:52px;margin-bottom:12px;}
+  .suc-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--success);margin-bottom:6px;}
+  .suc-id{font-size:17px;font-weight:700;color:var(--saffron);background:var(--saffron-pale);padding:8px 20px;border-radius:20px;display:inline-block;margin:10px 0 6px;letter-spacing:1px;}
+  .suc-name{font-size:14px;color:var(--mid);font-weight:600;margin-bottom:16px;}
+  .suc-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+  .suc-family-note{font-size:12px;color:var(--info);background:var(--info-pale);border:1px solid var(--info-border);border-radius:8px;padding:8px 12px;margin-bottom:16px;display:none;}
+  .suc-family-note.show{display:block;}
+  .suc-actions{display:flex;flex-direction:column;gap:10px;align-items:center;}
+  .btn-add-member{width:100%;max-width:320px;padding:14px 24px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(232,112,26,0.3);min-height:50px;}
+  .btn-finish{width:100%;max-width:320px;padding:12px 24px;background:white;color:var(--mid);border:2px solid var(--border);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;min-height:48px;}
+
+  /* ── TOAST ── */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--deep);color:white;padding:12px 22px;border-radius:50px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:1000;transition:transform 0.35s ease;max-width:90vw;text-align:center;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  .toast.terror{background:var(--error);}
+  .divider{height:1px;background:var(--border);margin:16px 0;}
+
+  /* ── WEBCAM MODAL ── */
+  .webcam-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:800;align-items:center;justify-content:center;padding:16px;}
+  .webcam-modal.show{display:flex;}
+  .webcam-box{background:var(--deep);border-radius:var(--radius);overflow:hidden;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,0.6);}
+  .webcam-header{padding:14px 18px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;}
+  .webcam-title{color:white;font-size:14px;font-weight:600;}
+  .webcam-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:22px;cursor:pointer;padding:0;line-height:1;}
+  .webcam-preview-wrap{position:relative;background:#000;aspect-ratio:4/3;overflow:hidden;}
+  .webcam-video{width:100%;height:100%;object-fit:cover;display:block;}
+  .webcam-canvas{display:none;}
+  .webcam-snapshot{display:none;width:100%;height:100%;object-fit:cover;}
+  .webcam-footer{padding:16px 18px;display:flex;gap:10px;justify-content:center;background:rgba(255,255,255,0.03);}
+  .wcbtn{padding:11px 22px;border-radius:50px;border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;min-height:44px;transition:all 0.15s;}
+  .wcbtn-capture{background:var(--saffron);color:white;}
+  .wcbtn-capture:hover{background:#d4621a;}
+  .wcbtn-retake{background:rgba(255,255,255,0.1);color:white;display:none;}
+  .wcbtn-retake:hover{background:rgba(255,255,255,0.2);}
+  .wcbtn-use{background:var(--success);color:white;display:none;}
+  .wcbtn-use:hover{background:#1b5e20;}
+  .wcbtn-upload{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);font-size:12px;}
+  .wcbtn-upload:hover{background:rgba(255,255,255,0.15);}
+  .webcam-error{padding:40px 20px;text-align:center;color:rgba(255,255,255,0.7);font-size:14px;display:none;}
+  .webcam-error-icon{font-size:40px;margin-bottom:12px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="header-inner">
+    <div class="header-badge">Official Member Registration</div>
+    <h1>Shri Nagpur Gujarati Dasa Sorathiya Vanik Samaj, Nagpur</h1>
+    <h2>શ્રી નાગપુર ગુજરાતી દસા સોરઠીઓ વણિક સમાજ, નાગપુર</h2>
+    <div class="member-id-badge">Member ID: <strong id="memberIdDisplay">Generating...</strong></div>
+    <div class="family-counter" id="familyCounter">
+      <div class="family-counter-inner">👨‍👩‍👧‍👦 Family Registration · Member <span id="familyMemberNum">1</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="form-wrap">
+
+  <!-- SUCCESS SCREEN -->
+  <div class="success-screen" id="successScreen">
+    <div class="suc-icon">🎉</div>
+    <div class="suc-title">Submitted Successfully!</div>
+    <div class="suc-id" id="successId"></div>
+    <div class="suc-name" id="successName"></div>
+    <div class="suc-family-note" id="familyNote">✅ Surname, Mul Vatan, Gotra and Residential Address will be pre-filled for the next member.</div>
+    <div class="suc-sub">Data saved to Google Sheet · Photos uploaded to Google Drive.</div>
+    <div class="suc-actions" id="successActions"></div>
+  </div>
+
+  <!-- MODE CHOOSER -->
+  <div class="mode-chooser" id="modeChooser">
+    <div class="mode-chooser-title">Before You Begin</div>
+    <div class="mode-chooser-sub">Please keep the following ready before filling the form.<br><span style="font-family:'Tiro Devanagari Gujarati',serif;font-size:12px;">ફોર્મ ભરતા પહેલાં નીચેની વસ્તુઓ તૈયાર રાખો.</span></div>
+
+    <div class="before-begin">
+      <div class="before-begin-title">
+        📋 Keep these ready
+        <span class="before-begin-title-gu">· આ તૈયાર રાખો</span>
+      </div>
+      <ul class="checklist">
+        <li>
+          <span class="ci">🪪</span>
+          <span class="ct">
+            <span class="ct-en">Aadhaar Card — physical card or on your phone</span>
+            <span class="ct-gu">આધાર કાર્ડ — હાથમાં અથવા ફોનમાં તૈયાર રાખો</span>
+          </span>
+        </li>
+        <li>
+          <span class="ci">☀️</span>
+          <span class="ct">
+            <span class="ct-en">Good lighting for photos — avoid dark rooms or direct glare</span>
+            <span class="ct-gu">ફોટો માટે સારો પ્રકાશ — અંધારું કે સીધો તડકો ટાળો</span>
+          </span>
+        </li>
+        <li>
+          <span class="ci">📱</span>
+          <span class="ct">
+            <span class="ct-en">Your active mobile number handy</span>
+            <span class="ct-gu">તમારો ચાલુ મોબાઈલ નંબર તૈયાર રાખો</span>
+          </span>
+        </li>
+        <li>
+          <span class="ci">🎓</span>
+          <span class="ct">
+            <span class="ct-en">Your highest educational qualification</span>
+            <span class="ct-gu">તમારી સૌથી ઊંચી શૈક્ષણિક લાયકાત</span>
+          </span>
+        </li>
+        <li id="checklist-family" style="display:none;">
+          <span class="ci">👨‍👩‍👧‍👦</span>
+          <span class="ct">
+            <span class="ct-en">For family registration — details of all members ready before starting</span>
+            <span class="ct-gu">પરિવાર નોંધણી માટે — બધા સભ્યોની વિગત પહેલેથી તૈયાર રાખો</span>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--mid);text-align:center;margin-bottom:14px;">Who are you registering today?</div>
+    <div class="mode-btns">
+      <a class="mode-btn" id="btnSingle" href="javascript:void(0)" onclick="setMode('single');return false;">
+        <div class="mode-btn-icon">👤</div>
+        <span class="mode-btn-label">Single Member</span>
+        <span class="mode-btn-sub">Registering one person only<br><span style="font-family:'Tiro Devanagari Gujarati',serif;">એક સભ્ય માટે</span></span>
+      </a>
+      <a class="mode-btn" id="btnFamily" href="javascript:void(0)" onclick="setMode('family');return false;">
+        <div class="mode-btn-icon">👨‍👩‍👧‍👦</div>
+        <span class="mode-btn-label">Family Registration</span>
+        <span class="mode-btn-sub">2 or more family members<br><span style="font-family:'Tiro Devanagari Gujarati',serif;">પરિવારના ૨ કે વધુ સભ્યો</span></span>
+      </a>
+    </div>
+  </div>
+
+  <!-- PRE-FILL BANNER -->
+  <div class="prefill-banner" id="prefillBanner">
+    <div class="prefill-banner-icon">ℹ️</div>
+    <div class="prefill-banner-text">
+      <strong>Family details pre-filled / પારિવારિક વિગત આપોઆપ ભરાઈ છે</strong>
+      Surname, Mul Vatan, Gotra and Residential Address have been carried over. Please fill this member's individual details.
+      <span class="prefill-edit-link" onclick="unlockFamilyFields()">Need to change these? Tap here to edit.</span>
+    </div>
+  </div>
+
+  <form id="memberForm" novalidate style="display:none;">
+
+    <!-- ══ SECTION 1: PERSONAL INFO ══ -->
+    <div class="section">
+      <div class="section-head">
+        <div class="sec-icon">👤</div>
+        <div><div class="sec-title">Personal Information</div><span class="sec-gu">વ્યક્તિગત માહિતી</span></div>
+      </div>
+      <div class="sec-body">
+        <div class="sec-instr">
+          <div class="sec-instr-en">Fill all details exactly as they appear on your Aadhaar card. All fields marked * are required.</div>
+          <div class="sec-instr-gu">બધી વિગત આધાર કાર્ડ પ્રમાણે ભરો. * વાળી તમામ ફીલ્ડ ભરવી ફરજિયાત છે.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label class="lbl">Mul Vatan / Native <span class="req">*</span></label>
+            <span class="lbl-gu">મૂળ વતન / ગામ</span>
+            <span class="locked-tag" id="lock-mulVatan">🔒 Pre-filled</span>
+            <input type="text" id="mulVatan" class="fi" placeholder="e.g. Surat, Rajkot...">
+            <div class="ferr" id="e-mulVatan">Mul Vatan / Native is required.</div>
+          </div>
+          <div class="field">
+            <label class="lbl">Gotra <span class="req">*</span></label>
+            <span class="lbl-gu">ગોત્ર</span>
+            <span class="locked-tag" id="lock-gotra">🔒 Pre-filled</span>
+            <input type="text" id="gotra" class="fi" placeholder="Enter gotra">
+            <div class="ferr" id="e-gotra">Gotra is required.</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label class="lbl">Surname <span class="req">*</span></label>
+            <span class="lbl-gu">અટક</span>
+            <span class="locked-tag" id="lock-surname">🔒 Pre-filled</span>
+            <input type="text" id="surname" class="fi" placeholder="Surname">
+            <div class="ferr" id="e-surname">Surname is required.</div>
+          </div>
+          <div class="field">
+            <label class="lbl">First Name <span class="req">*</span></label>
+            <span class="lbl-gu">પ્રથમ નામ</span>
+            <input type="text" id="firstName" class="fi" placeholder="First name">
+            <div class="ferr" id="e-firstName">First Name is required.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="lbl">Father's / Husband's Name <span class="req">*</span></label>
+          <span class="lbl-gu">પિતાનું / પતિનું નામ</span>
+          <input type="text" id="fatherHusbandName" class="fi" placeholder="Enter full name">
+          <div class="ferr" id="e-fatherHusbandName">Father's / Husband's Name is required.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label class="lbl">Mosal <span class="req">*</span></label>
+            <span class="lbl-gu">મોસાળ (માતાનું પ્રિયક)</span>
+            <input type="text" id="mosal" class="fi" placeholder="Maternal family village">
+            <div class="ferr" id="e-mosal">Mosal is required.</div>
+          </div>
+          <div class="field">
+            <label class="lbl">Date of Birth <span class="req">*</span></label>
+            <span class="lbl-gu">જન્મ તારીખ</span>
+            <input type="date" id="dob" class="fi">
+            <div class="ferr" id="e-dob">Please enter a valid date of birth.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="lbl">Blood Group <span class="req">*</span></label>
+          <span class="lbl-gu">લોહીનું જૂથ — નીચેમાંથી પસંદ કરો</span>
+          <div class="btn-sel-grid cols-4" style="margin-top:8px;">
+            <button type="button" class="sel-btn" data-group="bg" data-val="O+" onclick="selBtn(this,'bg')">O+</button>
+            <button type="button" class="sel-btn" data-group="bg" data-val="O-" onclick="selBtn(this,'bg')">O−</button>
+            <button type="button" class="sel-btn" data-group="bg" data-val="A+" onclick="selBtn(this,'bg')">A+</button>
+            <button type="button" class="sel-btn" data-group="bg" data-val="A-" onclick="selBtn(this,'bg')">A−</button>
+            <button type="button" class="sel-btn" data-group="bg" data-val="B+" onclick="selBtn(this,'bg')">B+</button>
+            <button type="button" class="sel-btn" data-group="bg" data-val="B-" onclick="selBtn(this,'bg')">B−</button>
+            <button type="button" class="sel-btn" data-group="bg" data-val="AB+" onclick="selBtn(this,'bg')">AB+</button>
+            <button type="button" class="sel-btn" data-group="bg" data-val="AB-" onclick="selBtn(this,'bg')">AB−</button>
+          </div>
+          <input type="hidden" id="bloodGroup" value="">
+          <div class="ferr" id="e-bg">Please select a blood group.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SECTION 2: PHOTOS ══ -->
+    <div class="section">
+      <div class="section-head">
+        <div class="sec-icon">📷</div>
+        <div><div class="sec-title">Photos</div><span class="sec-gu">ફોટા</span></div>
+      </div>
+      <div class="sec-body">
+        <div class="sec-instr">
+          <div class="sec-instr-en">Take photos in good lighting. For Aadhaar card, lay it flat on a plain surface and ensure all 4 corners are clearly visible. Use Camera to capture live or Gallery to upload an existing photo.</div>
+          <div class="sec-instr-gu">સારા પ્રકાશમાં ફોટો લો. આધાર કાર્ડ સાદી સપાટી પર સીધું મૂકો અને ચારેય ખૂણા સ્પષ્ટ દેખાય તેવો ફોટો લો. Camera થી સીધો ફોટો લો અથવા Gallery માંથી ફોટો પસંદ કરો.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl">Member Photo <span class="req">*</span></label>
+          <span class="lbl-gu">સભ્યનો ફોટો — સ્પષ્ટ ચહેરો દેખાય તેવો</span>
+          <div class="photo-zone" id="zone-memberPhoto">
+            <input type="file" id="file-memberPhoto" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="handlePhoto('memberPhoto',this)">
+            <div class="pz-icon">🤳</div>
+            <div class="pz-text">Upload your photo</div>
+            <div class="pz-sub">Face must be clearly visible · JPG or PNG · Max 10MB</div>
+            <div class="photo-btns">
+              <button type="button" class="pbtn" onclick="openCam('file-memberPhoto')">📷 Camera</button>
+              <button type="button" class="pbtn" onclick="openGallery('file-memberPhoto')">🖼️ Gallery</button>
+            </div>
+          </div>
+          <div class="ferr" id="e-memberPhoto">Member photo is required.</div>
+          <div class="photo-ok" id="ok-memberPhoto">✅ Member photo uploaded successfully</div>
+          <div class="photo-preview" id="prev-memberPhoto">
+            <img id="img-memberPhoto" src="" alt="Member Photo">
+            <button type="button" class="photo-remove" onclick="removePhoto('memberPhoto')">✕</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label class="lbl">Photo of Aadhaar Card <span class="req">*</span></label>
+          <span class="lbl-gu">આધાર કાર્ડનો ફોટો — ચારેય ખૂણા સ્પષ્ટ દેખાવા જોઈએ</span>
+          <div class="photo-zone" id="zone-aadhaarPhoto">
+            <input type="file" id="file-aadhaarPhoto" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="handlePhoto('aadhaarPhoto',this)">
+            <div class="pz-icon">🪪</div>
+            <div class="pz-text">Upload Aadhaar card photo</div>
+            <div class="pz-sub">All 4 corners must be visible · No glare or blur · JPG or PNG · Max 10MB</div>
+            <div class="photo-btns">
+              <button type="button" class="pbtn" onclick="openCam('file-aadhaarPhoto')">📷 Camera</button>
+              <button type="button" class="pbtn" onclick="openGallery('file-aadhaarPhoto')">🖼️ Gallery</button>
+            </div>
+          </div>
+          <div class="ferr" id="e-aadhaarPhoto">Aadhaar card photo is required.</div>
+          <div class="photo-ok" id="ok-aadhaarPhoto">✅ Aadhaar photo uploaded successfully</div>
+          <div class="photo-preview" id="prev-aadhaarPhoto">
+            <img id="img-aadhaarPhoto" src="" alt="Aadhaar Card">
+            <button type="button" class="photo-remove" onclick="removePhoto('aadhaarPhoto')">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SECTION 3: CONTACT & ADDRESS ══ -->
+    <div class="section">
+      <div class="section-head">
+        <div class="sec-icon">📞</div>
+        <div><div class="sec-title">Contact & Address</div><span class="sec-gu">સંપર્ક અને સરનામું</span></div>
+      </div>
+      <div class="sec-body">
+        <div class="sec-instr">
+          <div class="sec-instr-en">Enter your current residential address and an active mobile number where you can be reached. Email is optional.</div>
+          <div class="sec-instr-gu">તમારું હાલનું રહેઠાણ સરનામું અને ચાલુ મોબાઈલ નંબર ભરો. ઈ-મેઈલ વૈકલ્પિક છે.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl">Residential Address <span class="req">*</span></label>
+          <span class="lbl-gu">રહેઠાણનું સરનામું — વિસ્તાર, શહેર અને પિનકોડ સહિત</span>
+          <span class="locked-tag" id="lock-residentialAddress">🔒 Pre-filled</span>
+          <textarea id="residentialAddress" class="fi" placeholder="Flat/House no., Area, City, Pincode"></textarea>
+          <div class="ferr" id="e-residentialAddress">Residential address is required.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label class="lbl">Contact Number <span class="req">*</span></label>
+            <span class="lbl-gu">સંપર્ક નંબર — ૧૦ આંકડા</span>
+            <input type="tel" id="contactNumber" class="fi" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric">
+            <div class="ferr" id="e-contactNumber">Enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9.</div>
+          </div>
+          <div class="field">
+            <label class="lbl">Emergency Contact No</label>
+            <span class="lbl-gu">ઇમર્જન્સી નંબર — વૈકલ્પિક</span>
+            <input type="tel" id="emergencyContact" class="fi" placeholder="Optional" maxlength="10" inputmode="numeric">
+            <div class="ferr" id="e-emergencyContact">Enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="lbl">Email Address</label>
+          <span class="lbl-gu">ઈ-મેઈલ આઈડી — વૈકલ્પિક</span>
+          <input type="email" id="email" class="fi" placeholder="yourname@example.com">
+          <div class="ferr" id="e-email">Please enter a valid email address (e.g. name@example.com).</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl">Educational Qualifications <span class="req">*</span></label>
+          <span class="lbl-gu">શૈક્ષણિક લાયકાત — સૌથી ઊંચી ડિગ્રી લખો</span>
+          <input type="text" id="education" class="fi" placeholder="e.g. B.Com, M.Sc, MBA, SSC...">
+          <div class="ferr" id="e-education">Educational qualification is required.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SECTION 4: OCCUPATION ══ -->
+    <div class="section">
+      <div class="section-head">
+        <div class="sec-icon">💼</div>
+        <div><div class="sec-title">Occupation</div><span class="sec-gu">વ્યવસાય / નોકરી</span></div>
+      </div>
+      <div class="sec-body">
+        <div class="sec-instr">
+          <div class="sec-instr-en">First tap the button that best describes your current work. Additional fields will appear below based on your selection — please fill those in.</div>
+          <div class="sec-instr-gu">તમારા હાલના કામ સાથે સૌથી વધુ મળતો વિકલ્પ ટેપ કરો. પસંદગી પ્રમાણે નીચે વધારાની ફીલ્ડ દેખાશે — તે ભરો.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl">Select Occupation Type <span class="req">*</span></label>
+          <span class="lbl-gu">વ્યવસાયનો પ્રકાર પસંદ કરો</span>
+          <div class="btn-sel-grid cols-2" style="margin-top:8px;">
+            <button type="button" class="sel-btn" data-group="emp" data-val="employed" onclick="selEmp(this,'employed')">
+              💼 Employed (Job)<span class="sel-sub">નોકરી કરે છે</span>
+            </button>
+            <button type="button" class="sel-btn" data-group="emp" data-val="self-employed" onclick="selEmp(this,'self-employed')">
+              🛠️ Self Employed<span class="sel-sub">સ્વ-રોજગાર</span>
+            </button>
+            <button type="button" class="sel-btn" data-group="emp" data-val="business" onclick="selEmp(this,'business')">
+              🏪 In Business<span class="sel-sub">વ્યવસાયમાં</span>
+            </button>
+            <button type="button" class="sel-btn" data-group="emp" data-val="none" onclick="selEmp(this,'none')">
+              — Not Applicable<span class="sel-sub">લાગુ નથી</span>
+            </button>
+          </div>
+          <input type="hidden" id="empType" value="">
+          <div class="ferr" id="e-empType">Please select an occupation type.</div>
+        </div>
+
+        <div class="cond" id="sec-employed">
+          <div class="divider"></div>
+          <div class="field">
+            <label class="lbl">Employed As <span class="req">*</span></label>
+            <span class="lbl-gu">હોદ્દો / પદ — તરીકે નોકરી કરે છે</span>
+            <input type="text" id="employedAs" class="fi" placeholder="e.g. Teacher, Engineer, Accountant...">
+            <div class="ferr" id="e-employedAs">Please enter your designation or role.</div>
+          </div>
+          <div class="field">
+            <label class="lbl">Employer Name <span class="req">*</span></label>
+            <span class="lbl-gu">એમ્પ્લોયર / કંપનીનું નામ</span>
+            <input type="text" id="employerName" class="fi" placeholder="Company / Organization name">
+            <div class="ferr" id="e-employerName">Please enter the employer name.</div>
+          </div>
+          <div class="field">
+            <label class="lbl">Employment Address</label>
+            <span class="lbl-gu">કાર્યાલય / કામના સ્થળનું સરનામું — વૈકલ્પિક</span>
+            <textarea id="employmentAddress" class="fi" placeholder="Office / workplace address"></textarea>
+          </div>
+        </div>
+
+        <div class="cond" id="sec-self-employed">
+          <div class="divider"></div>
+          <div class="field">
+            <label class="lbl">Details of Employment <span class="req">*</span></label>
+            <span class="lbl-gu">કામની વિગત — શું કામ કરો છો</span>
+            <input type="text" id="detailsOfEmployment" class="fi" placeholder="e.g. Tutor, Consultant, Contractor...">
+            <div class="ferr" id="e-detailsOfEmployment">Please enter details of your work.</div>
+          </div>
+          <div class="field">
+            <label class="lbl">Under The Name</label>
+            <span class="lbl-gu">કયા નામ હેઠળ — વૈકલ્પિક</span>
+            <input type="text" id="underTheName" class="fi" placeholder="Practice / firm name if any">
+          </div>
+          <div class="field">
+            <label class="lbl">Business Address</label>
+            <span class="lbl-gu">કામના સ્થળનું સરનામું — વૈકલ્પિક</span>
+            <textarea id="selfEmployedAddress" class="fi" placeholder="Address of your work / practice"></textarea>
+          </div>
+        </div>
+
+        <div class="cond" id="sec-business">
+          <div class="divider"></div>
+          <div class="field">
+            <label class="lbl">Business Name <span class="req">*</span></label>
+            <span class="lbl-gu">વ્યવસાયનું નામ</span>
+            <input type="text" id="businessName" class="fi" placeholder="Name of the business">
+            <div class="ferr" id="e-businessName">Please enter the business name.</div>
+          </div>
+          <div class="field">
+            <label class="lbl">Type of Business</label>
+            <span class="lbl-gu">વ્યવસાયનો પ્રકાર — વૈકલ્પિક</span>
+            <input type="text" id="typeOfBusiness" class="fi" placeholder="e.g. Retail, Manufacturing, Trading...">
+          </div>
+          <div class="field">
+            <label class="lbl">Business Address</label>
+            <span class="lbl-gu">વ્યવસાયનું સ્થળ — વૈકલ્પિક</span>
+            <textarea id="businessAddress" class="fi" placeholder="Full business address"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SECTION 5: REMARKS ══ -->
+    <div class="section">
+      <div class="section-head">
+        <div class="sec-icon">📝</div>
+        <div><div class="sec-title">Remarks</div><span class="sec-gu">ટિપ્પણી / વધારાની માહિતી</span></div>
+      </div>
+      <div class="sec-body">
+        <div class="sec-instr">
+          <div class="sec-instr-en">This section is optional. Add any information that was not covered in the sections above.</div>
+          <div class="sec-instr-gu">આ વિભાગ વૈકલ્પિક છે. ઉપર ન આવેલી કોઈ પણ વધારાની માહિતી અહીં લખો.</div>
+        </div>
+        <div class="field">
+          <label class="lbl">Remarks and Other Information</label>
+          <span class="lbl-gu">ટિપ્પણીઓ અને અન્ય માહિતી</span>
+          <textarea id="remarks" class="fi" placeholder="Any additional notes or information..." style="min-height:100px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="err-box" id="errBox">
+      <div class="err-box-title">⚠️ Please fix the following before submitting:</div>
+      <ul id="errList"></ul>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit" class="btn-submit" id="submitBtn">✅ Submit Member Data</button>
+      <div class="submit-note">Fields marked <span style="color:var(--saffron)">*</span> are required</div>
+    </div>
+
+  </form>
+</div>
+
+<!-- WEBCAM MODAL -->
+<div class="webcam-modal" id="webcamModal">
+  <div class="webcam-box">
+    <div class="webcam-header">
+      <span class="webcam-title" id="webcamTitle">📷 Take Photo</span>
+      <button class="webcam-close" onclick="closeWebcam()">✕</button>
+    </div>
+    <div class="webcam-preview-wrap">
+      <video class="webcam-video" id="webcamVideo" autoplay playsinline muted></video>
+      <canvas class="webcam-canvas" id="webcamCanvas"></canvas>
+      <img class="webcam-snapshot" id="webcamSnapshot" alt="Snapshot">
+      <div class="webcam-error" id="webcamError">
+        <div class="webcam-error-icon">📷</div>
+        <div>Camera not available or permission denied.<br>Please use the Upload button instead.</div>
+      </div>
+    </div>
+    <div class="webcam-footer">
+      <button class="wcbtn wcbtn-capture" id="wcCapture" onclick="webcamCapture()">📸 Capture</button>
+      <button class="wcbtn wcbtn-retake" id="wcRetake" onclick="webcamRetake()">🔄 Retake</button>
+      <button class="wcbtn wcbtn-use" id="wcUse" onclick="webcamUse()">✅ Use This Photo</button>
+      <button class="wcbtn wcbtn-upload" onclick="webcamFallbackUpload()">📁 Upload Instead</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-box">
+    <div class="spin"></div>
+    <div class="ov-title">Submitting...</div>
+    <div class="ov-sub">Uploading photos and saving data.<br>Please do not close this page.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ── CONFIG ─────────────────────────────────────────────────────
+// ✏️  PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BETWEEN THE QUOTES BELOW
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-dvGIgsVQ64Uw8FaN46IKGcCtEoCuoANMDFQwSbsXHqpugImTMUVilc_kx1F1tNZTbQ/exec';
+
+// ── STATE ──────────────────────────────────────────────────────
+let memberId = '';
+let familyGroupId = '';
+let registrationMode = '';
+let familyMemberCount = 0;
+
+const FAMILY_FIELDS = ['surname','mulVatan','gotra','residentialAddress'];
+let familyData = { surname:'', mulVatan:'', gotra:'', residentialAddress:'' };
+const photos = { memberPhoto:null, aadhaarPhoto:null };
+const ALLOWED_TYPES = ['image/jpeg','image/jpg','image/png','image/webp'];
+
+// Detect mobile
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+// ── INIT ───────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+});
+
+function genId(prefix) {
+  return prefix + new Date().getFullYear().toString().slice(-2) + '-' + (Math.floor(Math.random()*90000)+10000);
+}
+function initId() {
+  memberId = genId('SNGDSVS-');
+  document.getElementById('memberIdDisplay').textContent = memberId;
+}
+initId();
+
+// ── MODE SELECTION ─────────────────────────────────────────────
+function setMode(mode) {
+  registrationMode = mode;
+  document.getElementById('btnSingle').classList.toggle('selected', mode==='single');
+  document.getElementById('btnFamily').classList.toggle('selected', mode==='family');
+  document.getElementById('modeChooser').style.display = 'none';
+  document.getElementById('memberForm').style.display = '';
+  if (mode === 'family') {
+    familyGroupId = genId('FAM-');
+    familyMemberCount = 1;
+    document.getElementById('familyCounter').classList.add('show');
+    document.getElementById('familyMemberNum').textContent = 1;
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── iOS-SAFE BUTTON SELECTORS ──────────────────────────────────
+function selBtn(btn, group) {
+  document.querySelectorAll('.sel-btn[data-group="'+group+'"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('bloodGroup').value = btn.dataset.val;
+  setErr('e-bg','',false);
+  updateProgress();
+}
+
+function selEmp(btn, type) {
+  document.querySelectorAll('.sel-btn[data-group="emp"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('empType').value = type;
+  ['employed','self-employed','business'].forEach(s => document.getElementById('sec-'+s).classList.remove('show'));
+  if (type !== 'none') document.getElementById('sec-'+type).classList.add('show');
+  setErr('e-empType','',false);
+  updateProgress();
+}
+
+// ── FAMILY FIELD LOCKING ───────────────────────────────────────
+function applyFamilyPrefill() {
+  FAMILY_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = familyData[id] || '';
+    el.classList.add('fi-locked'); el.readOnly = true;
+    el.classList.remove('err'); el.classList.add('ok');
+    setErr('e-'+id,'',false);
+    const lock = document.getElementById('lock-'+id);
+    if (lock) lock.classList.add('show');
+  });
+  document.getElementById('prefillBanner').classList.add('show');
+}
+
+function unlockFamilyFields() {
+  FAMILY_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.remove('fi-locked'); el.readOnly = false; }
+    const lock = document.getElementById('lock-'+id);
+    if (lock) lock.classList.remove('show');
+  });
+  document.getElementById('prefillBanner').classList.remove('show');
+  toast('Family fields unlocked — you can now edit them.','');
+}
+
+function saveFamilyFields() {
+  FAMILY_FIELDS.forEach(id => {
+    familyData[id] = document.getElementById(id)?.value.trim() || '';
+  });
+}
+
+// ── PHOTO HANDLING ────────────────────────────────────────────
+// openCam: on mobile uses native camera; on desktop opens webcam modal
+function openCam(id) {
+  if (isMobile) {
+    const el = document.getElementById(id);
+    el.setAttribute('capture', 'environment');
+    el.click();
+  } else {
+    const key = id.replace('file-', '');
+    openWebcam(key);
+  }
+}
+
+function openGallery(id) {
+  const el = document.getElementById(id);
+  el.removeAttribute('capture');
+  el.click();
+}
+
+function handlePhoto(key, input) {
+  const file = input.files[0]; if (!file) return;
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    setErr('e-'+key,'Invalid file type. Please upload JPG or PNG only.',true);
+    document.getElementById('zone-'+key).classList.add('perr'); input.value=''; return;
+  }
+  if (file.size > 10*1024*1024) {
+    setErr('e-'+key,'File too large ('+(file.size/1024/1024).toFixed(1)+'MB). Max 10MB.',true);
+    document.getElementById('zone-'+key).classList.add('perr'); input.value=''; return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    applyPhoto(key, e.target.result, file.type, file.name.split('.').pop().toLowerCase());
+  };
+  reader.onerror = () => setErr('e-'+key,'Could not read file. Please try again.',true);
+  reader.readAsDataURL(file);
+}
+
+function applyPhoto(key, dataUrl, mimeType, ext) {
+  photos[key] = { data: dataUrl.split(',')[1], mimeType, ext: ext || 'jpg' };
+  document.getElementById('img-'+key).src = dataUrl;
+  document.getElementById('prev-'+key).classList.add('show');
+  document.getElementById('ok-'+key).classList.add('show');
+  document.getElementById('zone-'+key).classList.remove('perr');
+  setErr('e-'+key,'',false);
+  updateProgress();
+}
+
+function removePhoto(key) {
+  photos[key]=null;
+  document.getElementById('prev-'+key).classList.remove('show');
+  document.getElementById('ok-'+key).classList.remove('show');
+  document.getElementById('file-'+key).value='';
+  updateProgress();
+}
+
+// ── WEBCAM (DESKTOP) ──────────────────────────────────────────
+let webcamStream = null;
+let webcamTargetKey = null;
+let webcamSnapshotData = null;
+
+function openWebcam(key) {
+  webcamTargetKey = key;
+  webcamSnapshotData = null;
+
+  // Reset UI state
+  const video = document.getElementById('webcamVideo');
+  const snapshot = document.getElementById('webcamSnapshot');
+  const errDiv = document.getElementById('webcamError');
+  video.style.display = 'block';
+  snapshot.style.display = 'none';
+  errDiv.style.display = 'none';
+  document.getElementById('wcCapture').style.display = '';
+  document.getElementById('wcRetake').style.display = 'none';
+  document.getElementById('wcUse').style.display = 'none';
+
+  const label = key === 'memberPhoto' ? '📷 Take Member Photo' : '📷 Take Aadhaar Card Photo';
+  document.getElementById('webcamTitle').textContent = label;
+  document.getElementById('webcamModal').classList.add('show');
+
+  // Request camera
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+    .then(stream => {
+      webcamStream = stream;
+      video.srcObject = stream;
+    })
+    .catch(() => {
+      // Camera not available — show error + upload option
+      video.style.display = 'none';
+      errDiv.style.display = 'block';
+      document.getElementById('wcCapture').style.display = 'none';
+    });
+}
+
+function webcamCapture() {
+  const video = document.getElementById('webcamVideo');
+  const canvas = document.getElementById('webcamCanvas');
+  const snapshot = document.getElementById('webcamSnapshot');
+
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  webcamSnapshotData = canvas.toDataURL('image/jpeg', 0.92);
+  snapshot.src = webcamSnapshotData;
+  snapshot.style.display = 'block';
+  video.style.display = 'none';
+
+  document.getElementById('wcCapture').style.display = 'none';
+  document.getElementById('wcRetake').style.display = 'inline-flex';
+  document.getElementById('wcUse').style.display = 'inline-flex';
+}
+
+function webcamRetake() {
+  const video = document.getElementById('webcamVideo');
+  const snapshot = document.getElementById('webcamSnapshot');
+  snapshot.style.display = 'none';
+  video.style.display = 'block';
+  webcamSnapshotData = null;
+  document.getElementById('wcCapture').style.display = 'inline-flex';
+  document.getElementById('wcRetake').style.display = 'none';
+  document.getElementById('wcUse').style.display = 'none';
+}
+
+function webcamUse() {
+  if (webcamSnapshotData && webcamTargetKey) {
+    applyPhoto(webcamTargetKey, webcamSnapshotData, 'image/jpeg', 'jpg');
+  }
+  closeWebcam();
+}
+
+function webcamFallbackUpload() {
+  closeWebcam();
+  // Open file picker for that key
+  const fileId = 'file-' + webcamTargetKey;
+  const el = document.getElementById(fileId);
+  if (el) { el.removeAttribute('capture'); el.click(); }
+}
+
+function closeWebcam() {
+  if (webcamStream) {
+    webcamStream.getTracks().forEach(t => t.stop());
+    webcamStream = null;
+  }
+  document.getElementById('webcamVideo').srcObject = null;
+  document.getElementById('webcamModal').classList.remove('show');
+  webcamTargetKey = null;
+  webcamSnapshotData = null;
+}
+
+// ── PROGRESS ──────────────────────────────────────────────────
+const PROG_FIELDS = ['mulVatan','gotra','surname','firstName','fatherHusbandName','mosal','dob','education','residentialAddress','contactNumber'];
+
+function updateProgress() {
+  let n=0, total=PROG_FIELDS.length+4;
+  PROG_FIELDS.forEach(id => { if (document.getElementById(id)?.value.trim()) n++; });
+  if (document.getElementById('bloodGroup').value) n++;
+  if (document.getElementById('empType').value) n++;
+  if (photos.memberPhoto) n++;
+  if (photos.aadhaarPhoto) n++;
+  document.getElementById('progressBar').style.width = Math.round(n/total*100)+'%';
+}
+document.getElementById('memberForm').addEventListener('input', updateProgress);
+
+// ── VALIDATION HELPERS ────────────────────────────────────────
+function setErr(id,msg,show) {
+  const el=document.getElementById(id); if(!el)return;
+  if(msg)el.textContent=msg;
+  if(show)el.classList.add('show'); else el.classList.remove('show');
+}
+function markFi(id,state) {
+  const el=document.getElementById(id); if(!el)return;
+  el.classList.remove('err','ok'); if(state)el.classList.add(state);
+}
+function chkMobile(val,req) {
+  if(!val)return req?'This field is required.':null;
+  if(!/^\d{10}$/.test(val))return 'Must be exactly 10 digits.';
+  if(!/^[6-9]/.test(val))return 'Must start with 6, 7, 8 or 9.';
+  return null;
+}
+function chkEmail(val) {
+  if(!val)return null;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)?null:'Invalid email. Format: name@example.com';
+}
+function chkDob(val) {
+  if(!val)return 'Date of birth is required.';
+  const d=new Date(val); if(isNaN(d))return 'Please enter a valid date.';
+  const today=new Date(); today.setHours(23,59,59,999);
+  if(d>today)return 'Date of birth cannot be a future date.';
+  if((today-d)/(365.25*24*3600*1000)>120)return 'Please enter a realistic date (not more than 120 years ago).';
+  return null;
+}
+function chkReq(id){ return document.getElementById(id)?.value.trim()?null:'This field is required.'; }
+
+function live(id,fn) {
+  document.getElementById(id)?.addEventListener('blur',()=>{
+    if(document.getElementById(id)?.readOnly)return;
+    const err=fn(); markFi(id,err?'err':'ok'); setErr('e-'+id,err||'',!!err);
+  });
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  // Close webcam on Escape
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeWebcam(); });
+
+  ['contactNumber','emergencyContact'].forEach(id=>{
+    document.getElementById(id)?.addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'');});
+  });
+  ['mulVatan','gotra','surname','firstName','fatherHusbandName','mosal','residentialAddress','education'].forEach(id=>{
+    live(id,()=>chkReq(id));
+  });
+  live('dob',()=>chkDob(document.getElementById('dob').value));
+  live('contactNumber',()=>chkMobile(document.getElementById('contactNumber').value.trim(),true));
+  live('emergencyContact',()=>{
+    const val=document.getElementById('emergencyContact').value.trim();
+    if(!val){document.getElementById('emergencyContact').classList.remove('err','ok');return null;}
+    return chkMobile(val,false);
+  });
+  live('email',()=>{
+    const val=document.getElementById('email').value.trim();
+    if(!val){document.getElementById('email').classList.remove('err','ok');return null;}
+    return chkEmail(val);
+  });
+});
+
+// ── FULL VALIDATION ───────────────────────────────────────────
+function validateAll() {
+  const errors=[];
+  function req(id,label){
+    const err=chkReq(id); markFi(id,err?'err':'ok'); setErr('e-'+id,err||'',!!err);
+    if(err)errors.push(label);
+  }
+  req('mulVatan','Mul Vatan / Native'); req('gotra','Gotra');
+  req('surname','Surname'); req('firstName','First Name');
+  req('fatherHusbandName',"Father's / Husband's Name"); req('mosal','Mosal');
+  req('residentialAddress','Residential Address'); req('education','Educational Qualifications');
+
+  const dobErr=chkDob(document.getElementById('dob').value);
+  markFi('dob',dobErr?'err':'ok'); setErr('e-dob',dobErr||'',!!dobErr);
+  if(dobErr)errors.push('Date of Birth');
+
+  if(!document.getElementById('bloodGroup').value){
+    setErr('e-bg','Please select a blood group.',true); errors.push('Blood Group');
+  } else setErr('e-bg','',false);
+
+  ['memberPhoto','aadhaarPhoto'].forEach(key=>{
+    const label=key==='memberPhoto'?'Member Photo':'Aadhaar Card Photo';
+    if(!photos[key]){
+      setErr('e-'+key,label+' is required.',true);
+      document.getElementById('zone-'+key).classList.add('perr'); errors.push(label);
+    } else { setErr('e-'+key,'',false); document.getElementById('zone-'+key).classList.remove('perr'); }
+  });
+
+  const cErr=chkMobile(document.getElementById('contactNumber').value.trim(),true);
+  markFi('contactNumber',cErr?'err':'ok'); setErr('e-contactNumber',cErr||'',!!cErr);
+  if(cErr)errors.push('Contact Number');
+
+  const ecVal=document.getElementById('emergencyContact').value.trim();
+  if(ecVal){
+    const ecErr=chkMobile(ecVal,false);
+    markFi('emergencyContact',ecErr?'err':'ok'); setErr('e-emergencyContact',ecErr||'',!!ecErr);
+    if(ecErr)errors.push('Emergency Contact');
+  }
+
+  const emVal=document.getElementById('email').value.trim();
+  if(emVal){
+    const emErr=chkEmail(emVal);
+    markFi('email',emErr?'err':'ok'); setErr('e-email',emErr||'',!!emErr);
+    if(emErr)errors.push('Email Address');
+  }
+
+  const empType=document.getElementById('empType').value;
+  if(!empType){ setErr('e-empType','Please select an occupation type.',true); errors.push('Occupation Type'); }
+  else setErr('e-empType','',false);
+
+  if(empType==='employed'){ req('employedAs','Employed As'); req('employerName','Employer Name'); }
+  if(empType==='self-employed') req('detailsOfEmployment','Details of Employment');
+  if(empType==='business') req('businessName','Business Name');
+
+  return errors;
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────
+document.getElementById('memberForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  if(!SCRIPT_URL||SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'){
+    toast('⚠️ Script URL not configured. Open the HTML file and paste your Apps Script URL.','terror'); return;
+  }
+  const errors=validateAll();
+  const box=document.getElementById('errBox');
+  if(errors.length>0){
+    document.getElementById('errList').innerHTML=errors.map(x=>`<li>${x}</li>`).join('');
+    box.classList.add('show'); box.scrollIntoView({behavior:'smooth',block:'center'}); return;
+  }
+  box.classList.remove('show');
+  if(registrationMode==='family') saveFamilyFields();
+
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('submitBtn').disabled=true;
+
+  const payload={
+    memberId,
+    familyGroupId: registrationMode==='family' ? familyGroupId : '',
+    mulVatan:v('mulVatan'), gotra:v('gotra'), surname:v('surname'), firstName:v('firstName'),
+    fatherHusbandName:v('fatherHusbandName'), memberPhoto:photos.memberPhoto, mosal:v('mosal'),
+    dob:document.getElementById('dob').value, education:v('education'),
+    residentialAddress:v('residentialAddress'), contactNumber:v('contactNumber'),
+    emergencyContact:v('emergencyContact'), email:v('email'),
+    bloodGroup:document.getElementById('bloodGroup').value,
+    aadhaarPhoto:photos.aadhaarPhoto,
+    employmentType:document.getElementById('empType').value,
+    employedAs:v('employedAs'), employerName:v('employerName'), employmentAddress:v('employmentAddress'),
+    detailsOfEmployment:v('detailsOfEmployment'), underTheName:v('underTheName'),
+    selfEmployedAddress:v('selfEmployedAddress'), businessName:v('businessName'),
+    typeOfBusiness:v('typeOfBusiness'), businessAddress:v('businessAddress'), remarks:v('remarks'),
+  };
+
+  try {
+    const res=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});
+    const result=await res.json();
+    document.getElementById('overlay').classList.remove('show');
+    if(result.success){ showSuccess(payload.firstName,payload.surname); }
+    else throw new Error(result.error||'Submission failed.');
+  } catch(err){
+    document.getElementById('overlay').classList.remove('show');
+    document.getElementById('submitBtn').disabled=false;
+    toast('❌ Error: '+err.message,'terror');
+  }
+});
+
+// ── SUCCESS SCREEN ────────────────────────────────────────────
+function showSuccess(firstName,surname){
+  document.getElementById('successId').textContent=memberId;
+  document.getElementById('successName').textContent=(firstName+' '+surname).trim();
+  document.getElementById('memberForm').style.display='none';
+  const actions=document.getElementById('successActions');
+  const note=document.getElementById('familyNote');
+  if(registrationMode==='family'){
+    note.classList.add('show');
+    actions.innerHTML=`<button class="btn-add-member" onclick="addNextFamilyMember()">➕ Add Next Family Member</button><button class="btn-finish" onclick="finishRegistration()">✅ Done — Finish Registration</button>`;
+  } else {
+    note.classList.remove('show');
+    actions.innerHTML=`<button class="btn-add-member" onclick="startFresh()">➕ Register Another Member</button>`;
+  }
+  document.getElementById('successScreen').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── NEXT FAMILY MEMBER ────────────────────────────────────────
+function addNextFamilyMember(){
+  familyMemberCount++;
+  document.getElementById('familyMemberNum').textContent=familyMemberCount;
+  hardReset();
+  document.getElementById('memberForm').style.display='';
+  document.getElementById('successScreen').classList.remove('show');
+  applyFamilyPrefill();
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── FINISH / FRESH ────────────────────────────────────────────
+function finishRegistration(){
+  hardReset();
+  registrationMode=''; familyMemberCount=0; familyGroupId='';
+  familyData={surname:'',mulVatan:'',gotra:'',residentialAddress:''};
+  document.getElementById('familyCounter').classList.remove('show');
+  document.getElementById('btnSingle').classList.remove('selected');
+  document.getElementById('btnFamily').classList.remove('selected');
+  document.getElementById('modeChooser').style.display='';
+  document.getElementById('successScreen').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function startFresh(){
+  hardReset();
+  document.getElementById('successScreen').classList.remove('show');
+  registrationMode='';
+  document.getElementById('btnSingle').classList.remove('selected');
+  document.getElementById('btnFamily').classList.remove('selected');
+  document.getElementById('modeChooser').style.display='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── HARD RESET ────────────────────────────────────────────────
+function hardReset(){
+  document.getElementById('memberForm').reset();
+  document.getElementById('memberForm').style.display='none';
+  document.getElementById('errBox').classList.remove('show');
+  document.getElementById('prefillBanner').classList.remove('show');
+
+  document.querySelectorAll('.sel-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('bloodGroup').value='';
+  document.getElementById('empType').value='';
+
+  FAMILY_FIELDS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.classList.remove('fi-locked');el.readOnly=false;}
+    const lock=document.getElementById('lock-'+id);
+    if(lock)lock.classList.remove('show');
+  });
+
+  photos.memberPhoto=null; photos.aadhaarPhoto=null;
+  ['memberPhoto','aadhaarPhoto'].forEach(k=>{
+    document.getElementById('prev-'+k).classList.remove('show');
+    document.getElementById('ok-'+k).classList.remove('show');
+    document.getElementById('zone-'+k).classList.remove('perr');
+    setErr('e-'+k,'',false);
+    document.getElementById('file-'+k).value='';
+  });
+
+  ['employed','self-employed','business'].forEach(s=>document.getElementById('sec-'+s).classList.remove('show'));
+  document.querySelectorAll('.fi').forEach(el=>el.classList.remove('err','ok','fi-locked'));
+  document.querySelectorAll('.ferr').forEach(el=>el.classList.remove('show'));
+  document.getElementById('submitBtn').disabled=false;
+  document.getElementById('progressBar').style.width='0%';
+  document.getElementById('dob').max=new Date().toISOString().split('T')[0];
+  initId();
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function v(id){return document.getElementById(id)?.value.trim()||'';}
+
+let toastT;
+function toast(msg,cls=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast show '+cls;
+  clearTimeout(toastT); toastT=setTimeout(()=>{el.className='toast';},4500);
+}
+</script>
+</body>
+</html>
