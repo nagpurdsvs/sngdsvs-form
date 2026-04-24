@@ -1069,7 +1069,7 @@ function validateAll() {
 // ── SUBMIT ────────────────────────────────────────────────────
 document.getElementById('memberForm').addEventListener('submit', async e=>{
   e.preventDefault();
-  if(!SCRIPT_URL||SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'){
+  if(!SCRIPT_URL||SCRIPT_URL==='https://script.google.com/macros/s/AKfycby-dvGIgsVQ64Uw8FaN46IKGcCtEoCuoANMDFQwSbsXHqpugImTMUVilc_kx1F1tNZTbQ/exec'){
     toast('⚠️ Script URL not configured. Open the HTML file and paste your Apps Script URL.','terror'); return;
   }
   const errors=validateAll();
